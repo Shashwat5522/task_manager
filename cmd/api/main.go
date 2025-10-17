@@ -5,6 +5,7 @@ import (
 	stdlog "log"
 
 	"github.com/vedologic/task-manager/config"
+	"github.com/vedologic/task-manager/internal/repository"
 	"github.com/vedologic/task-manager/pkg/database"
 	"github.com/vedologic/task-manager/pkg/logger"
 )
@@ -56,7 +57,14 @@ func main() {
 	log.Info(fmt.Sprintf("Database: %s:%d/%s", cfg.Database.Host, cfg.Database.Port, cfg.Database.DBName))
 	log.Info(fmt.Sprintf("Connection Pool - Max Open: %d, Max Idle: %d", cfg.Database.MaxOpenConns, cfg.Database.MaxIdleConns))
 
-	// TODO: Initialize repositories
+	// Initialize repositories
+	log.Info("Initializing repositories...")
+	_ = repository.NewUserRepository(db)
+	_ = repository.NewTaskRepository(db)
+	log.Info("Repositories initialized successfully")
+	log.Info("User Repository: ready")
+	log.Info("Task Repository: ready")
+
 	// TODO: Initialize services
 	// TODO: Initialize handlers
 	// TODO: Setup routes and middleware
@@ -64,4 +72,8 @@ func main() {
 	// TODO: Handle graceful shutdown
 
 	log.Info("Application initialization complete")
+
+	// Keep application running
+	log.Info("Task Manager API is ready to serve requests")
+	select {}
 }
