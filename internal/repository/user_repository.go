@@ -25,8 +25,9 @@ func NewUserRepository(db *sqlx.DB) UserRepository {
 // SQL Queries
 const (
 	queryCreateUser = `
-		INSERT INTO users (id, email, password_hash, created_at, updated_at)
-		VALUES ($1, $2, $3, $4, $5)
+		INSERT INTO users (email, password_hash, created_at, updated_at)
+		VALUES ($1, $2, $3, $4)
+		RETURNING id
 	`
 
 	queryFindUserByEmail = `
@@ -48,27 +49,17 @@ const (
 
 // Create creates a new user in the database
 func (r *userRepository) Create(ctx context.Context, user *domain.User) error {
-	result, err := r.db.ExecContext(
+	err := r.db.QueryRowContext(
 		ctx,
 		queryCreateUser,
-		user.ID,
 		user.Email,
 		user.PasswordHash,
 		user.CreatedAt,
 		user.UpdatedAt,
-	)
+	).Scan(&user.ID)
 
 	if err != nil {
 		return fmt.Errorf("failed to create user: %w", err)
-	}
-
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
-		return fmt.Errorf("failed to get rows affected: %w", err)
-	}
-
-	if rowsAffected == 0 {
-		return errors.New("no rows affected when creating user")
 	}
 
 	return nil
