@@ -26,8 +26,9 @@ func NewTaskRepository(db *sqlx.DB) TaskRepository {
 // SQL Queries
 const (
 	queryCreateTask = `
-		INSERT INTO tasks (id, user_id, title, description, status, created_at, updated_at)
-		VALUES ($1, $2, $3, $4, $5, $6, $7)
+		INSERT INTO tasks (user_id, title, description, status, created_at, updated_at)
+		VALUES ($1, $2, $3, $4, $5, $6)
+		RETURNING id
 	`
 
 	queryFindTaskByID = `
@@ -80,29 +81,19 @@ const (
 
 // Create creates a new task in the database
 func (r *taskRepository) Create(ctx context.Context, task *domain.Task) error {
-	result, err := r.db.ExecContext(
+	err := r.db.QueryRowContext(
 		ctx,
 		queryCreateTask,
-		task.ID,
 		task.UserID,
 		task.Title,
 		task.Description,
 		task.Status,
 		task.CreatedAt,
 		task.UpdatedAt,
-	)
+	).Scan(&task.ID)
 
 	if err != nil {
 		return fmt.Errorf("failed to create task: %w", err)
-	}
-
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
-		return fmt.Errorf("failed to get rows affected: %w", err)
-	}
-
-	if rowsAffected == 0 {
-		return errors.New("no rows affected when creating task")
 	}
 
 	return nil
