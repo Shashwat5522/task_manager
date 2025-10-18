@@ -5,14 +5,24 @@ import "time"
 type TaskStatus string
 
 const (
-	TaskStatusTodo       TaskStatus = "todo"
+	TaskStatusTodo       TaskStatus = "pending"
 	TaskStatusInProgress TaskStatus = "in_progress"
-	TaskStatusDone       TaskStatus = "done"
+	TaskStatusDone       TaskStatus = "completed"
 )
 
+// IsValid checks if the task status is valid
+func (ts TaskStatus) IsValid() bool {
+	switch ts {
+	case TaskStatusTodo, TaskStatusInProgress, TaskStatusDone:
+		return true
+	default:
+		return false
+	}
+}
+
 type Task struct {
-	ID          string     `db:"id" json:"id"`
-	UserID      string     `db:"user_id" json:"user_id"`
+	ID          int        `db:"id" json:"id"`
+	UserID      int        `db:"user_id" json:"user_id"`
 	Title       string     `db:"title" json:"title"`
 	Description string     `db:"description" json:"description"`
 	Status      TaskStatus `db:"status" json:"status"`

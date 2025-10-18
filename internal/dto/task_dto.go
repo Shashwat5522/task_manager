@@ -18,11 +18,22 @@ type BulkCompleteRequest struct {
 	TaskIDs []string `json:"task_ids" binding:"required,min=1"`
 }
 
+type TaskResponse struct {
+	ID          string            `json:"id"`
+	UserID      string            `json:"user_id"`
+	Title       string            `json:"title"`
+	Description string            `json:"description"`
+	Status      domain.TaskStatus `json:"status"`
+	CreatedAt   string            `json:"created_at"`
+	UpdatedAt   string            `json:"updated_at"`
+}
+
 type TaskListResponse struct {
-	Tasks      []domain.Task `json:"tasks"`
-	TotalCount int64         `json:"total_count"`
-	Page       int           `json:"page"`
-	Limit      int           `json:"limit"`
+	Tasks      []TaskResponse `json:"tasks"`
+	TotalCount int64          `json:"total_count"`
+	Page       int            `json:"page"`
+	Limit      int            `json:"limit"`
+	TotalPages int            `json:"total_pages"`
 }
 
 type BulkCompleteResponse struct {
