@@ -187,7 +187,7 @@ func (s *taskService) BulkComplete(ctx context.Context, userID string, req dto.B
 			defer wg.Done()
 			for taskID := range taskIDsChan {
 				// Verify ownership
-				_, err := s.GetByID(ctx, taskID, userID)
+				existingTask, err := s.GetByID(ctx, taskID, userID)
 				if err != nil {
 					resultsChan <- fmt.Errorf("task %s: %w", taskID, err)
 					continue
@@ -200,12 +200,14 @@ func (s *taskService) BulkComplete(ctx context.Context, userID string, req dto.B
 					continue
 				}
 
-				// Update task status
+				// Update only status while preserving title and description
 				task := &domain.Task{
-					ID:        taskIDInt,
-					UserID:    userIDInt,
-					Status:    domain.TaskStatusDone,
-					UpdatedAt: time.Now(),
+					ID:          taskIDInt,
+					UserID:      userIDInt,
+					Title:       existingTask.Title,
+					Description: existingTask.Description,
+					Status:      domain.TaskStatusDone,
+					UpdatedAt:   time.Now(),
 				}
 
 				if err := s.taskRepo.Update(ctx, task); err != nil {
