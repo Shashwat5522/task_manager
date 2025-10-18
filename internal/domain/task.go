@@ -5,9 +5,9 @@ import "time"
 type TaskStatus string
 
 const (
-	TaskStatusTodo       TaskStatus = "pending"
+	TaskStatusTodo       TaskStatus = "todo"
 	TaskStatusInProgress TaskStatus = "in_progress"
-	TaskStatusDone       TaskStatus = "completed"
+	TaskStatusDone       TaskStatus = "done"
 )
 
 // IsValid checks if the task status is valid
