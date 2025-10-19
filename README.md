@@ -16,13 +16,13 @@ The Task Manager API is a robust backend service that provides:
 ## Features
 
 ### Core Functionality
-- ✅ User registration with email and password validation
-- ✅ JWT-based authentication and authorization
-- ✅ Task CRUD operations (Create, Read, Update, Delete)
-- ✅ Task filtering by status and pagination
-- ✅ Bulk task completion operations
-- ✅ Automatic database migrations on startup
-- ✅ Schema verification and integrity checks
+- User registration with email and password validation
+- JWT-based authentication and authorization
+- Task CRUD operations (Create, Read, Update, Delete)
+- Task filtering by status and pagination
+- Bulk task completion operations
+- Automatic database migrations on startup
+- Schema verification and integrity checks
 
 ### Technical Highlights
 - Clean Architecture with separation of concerns (handlers, services, repositories, domain)
@@ -248,13 +248,13 @@ Database (PostgreSQL)
 
 ## Security Features
 
-- ✅ Password hashing with bcrypt
-- ✅ JWT token-based authentication
-- ✅ Token expiration and validation
-- ✅ Protected endpoints with middleware
-- ✅ Secure headers and CORS handling
-- ✅ Input validation and sanitization
-- ✅ SQL injection prevention with prepared statements
+- Password hashing with bcrypt
+- JWT token-based authentication
+- Token expiration and validation
+- Protected endpoints with middleware
+- Secure headers and CORS handling
+- Input validation and sanitization
+- SQL injection prevention with prepared statements
 
 ## Performance Considerations
 
@@ -308,25 +308,6 @@ Solution: Verify token is included in Authorization header with Bearer prefix
 3. Push to the repository: `git push origin feature/your-feature`
 4. Create a Pull Request
 
-## Testing
-
-Run tests:
-```bash
-go test ./...
-```
-
-Run tests with coverage:
-```bash
-go test -cover ./...
-```
-
-## Deployment
-
-### Docker Deployment
-```bash
-docker build -t task-manager-api .
-docker run -p 8080:8080 --env-file .env task-manager-api
-```
 
 ### Production Considerations
 - Use environment variables for sensitive data

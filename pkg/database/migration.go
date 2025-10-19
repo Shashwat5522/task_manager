@@ -26,7 +26,7 @@ func NewMigrationManager(dbURL string, log *zap.Logger) *MigrationManager {
 
 // RunMigrationsIfNeeded runs pending migrations if the schema doesn't exist or is incomplete
 func (m *MigrationManager) RunMigrationsIfNeeded() error {
-	m.log.Info("🔄 Starting migration check...")
+	m.log.Info("Starting migration check...")
 
 	// Get the absolute path to migrations directory
 	migrationsPath, err := filepath.Abs("migrations")
@@ -35,7 +35,7 @@ func (m *MigrationManager) RunMigrationsIfNeeded() error {
 	}
 
 	migrationSourceURL := fmt.Sprintf("file://%s", migrationsPath)
-	m.log.Debug("📂 Migration source URL", zap.String("path", migrationSourceURL))
+	m.log.Debug("Migration source URL", zap.String("path", migrationSourceURL))
 
 	migrator, err := migrate.New(migrationSourceURL, m.dbURL)
 	if err != nil {
@@ -47,12 +47,12 @@ func (m *MigrationManager) RunMigrationsIfNeeded() error {
 	version, dirty, err := migrator.Version()
 	if err != nil {
 		if err == migrate.ErrNilVersion {
-			m.log.Info("📊 No migrations applied yet, running all migrations...")
+			m.log.Info("No migrations applied yet, running all migrations...")
 		} else {
 			return fmt.Errorf("failed to get migration version: %w", err)
 		}
 	} else {
-		m.log.Info("📊 Current migration version", zap.Uint("version", version), zap.Bool("dirty", dirty))
+		m.log.Info("Current migration version", zap.Uint("version", version), zap.Bool("dirty", dirty))
 	}
 
 	// Run pending migrations
@@ -62,9 +62,9 @@ func (m *MigrationManager) RunMigrationsIfNeeded() error {
 	}
 
 	if err == migrate.ErrNoChange {
-		m.log.Info("✅ No new migrations to apply")
+		m.log.Info("No new migrations to apply")
 	} else {
-		m.log.Info("✅ Migrations applied successfully")
+		m.log.Info("Migrations applied successfully")
 	}
 
 	return nil
@@ -139,7 +139,7 @@ func (m *MigrationManager) CheckTablesExist(db *sqlx.DB) (bool, error) {
 // Non-blocking implementation: Only critical tables trigger errors
 // Indices are optional - they will be added in future migrations if needed
 func (m *MigrationManager) VerifySchema(db *sqlx.DB, log *zap.Logger) error {
-	log.Info("🔍 Verifying database schema integrity...")
+	log.Info("Verifying database schema integrity...")
 
 	// Critical checks that must exist for the app to function
 	criticalChecks := []struct {
@@ -156,16 +156,16 @@ func (m *MigrationManager) VerifySchema(db *sqlx.DB, log *zap.Logger) error {
 		var exists int64
 		err := db.QueryRow(check.query).Scan(&exists)
 		if err != nil {
-			log.Error("❌ Critical schema verification failed", zap.String("check", check.name), zap.Error(err))
+			log.Error("Critical schema verification failed", zap.String("check", check.name), zap.Error(err))
 			return fmt.Errorf("critical schema verification failed for %s: %w", check.name, err)
 		}
 		if exists == 0 {
-			log.Error("❌ Missing critical schema component", zap.String("component", check.name))
+			log.Error("Missing critical schema component", zap.String("component", check.name))
 			return fmt.Errorf("missing critical schema component: %s", check.name)
 		}
-		log.Debug("✅ Critical schema component verified", zap.String("component", check.name))
+		log.Debug("Critical schema component verified", zap.String("component", check.name))
 	}
 
-	log.Info("✅ Database schema verification completed successfully")
+	log.Info("Database schema verification completed successfully")
 	return nil
 }
