@@ -226,17 +226,6 @@ Set log level via `SERVER_ENV`:
 ### Clean Architecture Principles
 The project follows clean architecture with clear separation of concerns:
 
-```
-HTTP Request
-    ↓
-Handler (HTTP Layer)
-    ↓
-Service (Business Logic)
-    ↓
-Repository (Data Access)
-    ↓
-Database (PostgreSQL)
-```
 
 ### Layers
 
@@ -246,89 +235,3 @@ Database (PostgreSQL)
 4. **Domain Layer**: Contains business entities and models
 5. **Middleware Layer**: Cross-cutting concerns (auth, logging, recovery)
 
-## Security Features
-
-- Password hashing with bcrypt
-- JWT token-based authentication
-- Token expiration and validation
-- Protected endpoints with middleware
-- Secure headers and CORS handling
-- Input validation and sanitization
-- SQL injection prevention with prepared statements
-
-## Performance Considerations
-
-- Database query optimization with indexes
-- Pagination support for list endpoints
-- Connection pooling with SQLX
-- Efficient error handling
-- Structured logging without performance impact
-
-## Git Workflow
-
-The project follows a gradual development strategy with focused commits:
-
-```bash
-# Each feature/component has dedicated commits:
-git log --oneline
-# - Fix domain models: change ID types from string to int
-# - Update task status values to todo, in_progress, done
-# - Improve logging output in main.go
-# - Improve route registration logging
-# - Implement HTTP middleware
-# - Implement HTTP handlers
-# - Fix bulk complete operations
-# - Add Swagger API documentation
-```
-
-## Troubleshooting
-
-### Database Connection Issues
-```
-Error: failed to connect to database
-Solution: Verify PostgreSQL is running and credentials are correct
-```
-
-### Migration Errors
-```
-Error: failed to run migrations
-Solution: Check migrations directory exists and files are valid SQL
-```
-
-### JWT Token Issues
-```
-Error: 401 Unauthorized
-Solution: Verify token is included in Authorization header with Bearer prefix
-```
-
-## Contributing
-
-1. Create a feature branch: `git checkout -b feature/your-feature`
-2. Make changes with focused commits
-3. Push to the repository: `git push origin feature/your-feature`
-4. Create a Pull Request
-
-
-### Production Considerations
-- Use environment variables for sensitive data
-- Enable HTTPS with proper certificates
-- Configure appropriate CORS policies
-- Set up monitoring and alerting
-- Use a reverse proxy (nginx/traefik)
-- Enable database backups
-
-## License
-
-This project is provided as a practical task implementation.
-
-## Support
-
-For issues or questions:
-1. Check the Swagger documentation at `/swagger/index.html`
-2. Review the error messages in logs
-3. Verify environment configuration
-4. Check database connectivity
-
-## Version History
-
-- **1.0.0** - Initial release with full API functionality, JWT auth, and Swagger docs
