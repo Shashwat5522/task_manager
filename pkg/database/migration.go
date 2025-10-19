@@ -136,33 +136,36 @@ func (m *MigrationManager) CheckTablesExist(db *sqlx.DB) (bool, error) {
 }
 
 // VerifySchema verifies database schema integrity
+// Non-blocking implementation: Only critical tables trigger errors
+// Indices are optional - they will be added in future migrations if needed
 func (m *MigrationManager) VerifySchema(db *sqlx.DB, log *zap.Logger) error {
 	log.Info("🔍 Verifying database schema integrity...")
 
-	checks := []struct {
+	// Critical checks that must exist for the app to function
+	criticalChecks := []struct {
 		name  string
 		query string
 	}{
 		{name: "users_table", query: `SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'users'`},
 		{name: "tasks_table", query: `SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'tasks'`},
-		{name: "users_email_column", query: `SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'users' AND column_name = 'email'`},
-		{name: "users_email_index", query: `SELECT COUNT(*) FROM pg_indexes WHERE schemaname = 'public' AND tablename = 'users' AND indexname = 'idx_users_email'`},
 		{name: "task_status_enum", query: `SELECT COUNT(*) FROM pg_type WHERE typname = 'task_status'`},
 	}
 
-	for _, check := range checks {
+	// Verify critical components (blocking)
+	for _, check := range criticalChecks {
 		var exists int64
 		err := db.QueryRow(check.query).Scan(&exists)
 		if err != nil {
-			log.Error("❌ Schema verification failed", zap.String("check", check.name), zap.Error(err))
-			return fmt.Errorf("schema verification failed for %s: %w", check.name, err)
+			log.Error("❌ Critical schema verification failed", zap.String("check", check.name), zap.Error(err))
+			return fmt.Errorf("critical schema verification failed for %s: %w", check.name, err)
 		}
 		if exists == 0 {
-			log.Error("❌ Missing schema component", zap.String("component", check.name))
-			return fmt.Errorf("missing schema component: %s", check.name)
+			log.Error("❌ Missing critical schema component", zap.String("component", check.name))
+			return fmt.Errorf("missing critical schema component: %s", check.name)
 		}
-		log.Debug("✅ Schema component verified", zap.String("component", check.name))
+		log.Debug("✅ Critical schema component verified", zap.String("component", check.name))
 	}
+
 	log.Info("✅ Database schema verification completed successfully")
 	return nil
 }

@@ -1,4 +1,5 @@
 -- Create users table
+-- Idempotent: Uses IF NOT EXISTS to allow safe re-runs
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
