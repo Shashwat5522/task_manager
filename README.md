@@ -126,6 +126,18 @@ Tasks support three status values:
 - `in_progress` - Task is currently being worked on
 - `done` - Task has been completed
 
+## Database Integration
+
+**Database**: PostgreSQL
+
+**Why PostgreSQL?**
+- Open-source and reliable
+- ACID compliance for data integrity
+- SQLX provides type-safe queries
+- Supports custom types (enums)
+- Excellent Go library support
+- Good performance for REST APIs
+
 ## Database Migrations
 
 ### Automatic Migration on Startup
