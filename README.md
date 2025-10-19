@@ -91,6 +91,38 @@ go run ./cmd/api/main.go
 
 The API will start on `http://localhost:8080`
 
+## Docker Deployment
+
+### Quick Start with Docker Compose
+
+**Prerequisites**: Docker and Docker Compose installed
+
+**Run the application:**
+```bash
+docker compose up --build
+```
+
+**What happens automatically:**
+- PostgreSQL database starts on port 5433
+- API service builds and starts on port 8080
+- Database is initialized and migrations run automatically
+- Both services have health checks
+
+**Access the API:**
+- API: `http://localhost:8080`
+- Swagger UI: `http://localhost:8080/swagger/index.html`
+- Health check: `http://localhost:8080/health`
+
+**Stop the services:**
+```bash
+docker compose down
+```
+
+**Clean up everything (including database):**
+```bash
+docker compose down -v
+```
+
 ## API Documentation
 
 ### Swagger UI
@@ -231,19 +263,4 @@ The application uses Zap for structured logging. Log levels:
 
 Set log level via `SERVER_ENV`:
 - `development` - Debug level logging
-- `production` - Info level logging
-
-## Architecture
-
-### Clean Architecture Principles
-The project follows clean architecture with clear separation of concerns:
-
-
-### Layers
-
-1. **Handler Layer**: Manages HTTP requests/responses
-2. **Service Layer**: Implements business logic and validations
-3. **Repository Layer**: Handles database operations
-4. **Domain Layer**: Contains business entities and models
-5. **Middleware Layer**: Cross-cutting concerns (auth, logging, recovery)
-
+- `production`
